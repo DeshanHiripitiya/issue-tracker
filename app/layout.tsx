@@ -1,5 +1,5 @@
 import '@radix-ui/themes/styles.css';
-import { Theme, ThemePanel } from '@radix-ui/themes';
+import { Theme } from '@radix-ui/themes';
 import type { Metadata } from "next";
 import './theme-config.css';
 import localFont from "next/font/local";

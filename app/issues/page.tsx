@@ -6,7 +6,7 @@ const IssuePage = () => {
     <div>
       <Button color='indigo' variant='soft'>
         <Link href='/issues/new'>New Issue</Link>{' '}
-      </Button>
+      </Button> 
     </div>
   );
 };

@@ -9,7 +9,7 @@ import {
   TextField,
 } from '@radix-ui/themes';
 import SimpleMDE from 'react-simplemde-editor';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import 'easymde/dist/easymde.min.css';
 import { issueSchema } from '@/app/validationSchema';
 import axios from 'axios';
