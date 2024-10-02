@@ -6,7 +6,6 @@ import {
   Callout,
   Flex,
   Text,
-  TextArea,
   TextField,
 } from '@radix-ui/themes';
 import SimpleMDE from 'react-simplemde-editor';
@@ -17,6 +16,8 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import ErrorMessage from '@/app/components/ErrorMessage';
+import Spinner from '@/app/components/Spinner';
 
 type IssueForm = z.infer<typeof issueSchema>;
 // z.infer<typeof issueSchema> will generate the following type automatically:
@@ -36,6 +37,21 @@ const NewIssuePage = () => {
     resolver: zodResolver(issueSchema),
   });
   const [error, setError] = useState('');
+  const [isSubmitting, setSubmitting] = useState(false);    
+
+
+  const onSubmit = handleSubmit(async (data) => {
+          try {
+            setSubmitting(true);
+            await axios.post('/api/issues', data);
+            router.push('/issues');
+            
+          } catch (error) {
+            // setSubmitting(false);
+            setError('An unexpected error occurred.');
+            setSubmitting(false);
+          }
+        }) 
 
   return (
     <div className='max-w-[500px]'>
@@ -45,24 +61,14 @@ const NewIssuePage = () => {
         </Callout.Root>
       )}
 
-      <form
-        onSubmit={handleSubmit(async (data) => {
-          try {
-            await axios.post('/api/issues', data);
-            router.push('/issues');
-          } catch (error) {
-            // setSubmitting(false);
-            setError('An unexpected error occurred.');
-          }
-        })}
-      >
+      <form onSubmit={onSubmit}>
         <Flex direction='column' gap='3' maxWidth='500px'>
           <TextField.Root
             variant='classic'
             placeholder='title'
             {...register('title')}
           />
-          {errors.title && <Text color='red'>{errors.title.message}</Text>}
+          <ErrorMessage>{errors.title?.message}</ErrorMessage>
           <Controller //This is a component from react-hook-form that allows you to handle complex form fields, such as a custom component or an external UI library that doesn't directly support register
             name='description'
             control={control} //This passes the form control object from react-hook-form to manage the state and validation for this specific field.
@@ -76,9 +82,9 @@ const NewIssuePage = () => {
               />
             )}
           />
-          {errors.description && <Text color='red'>{errors.description.message}</Text>}
-          <Button color='indigo' variant='soft'>
-            Submit New Issue
+          <Text color='red'>{errors.description?.message}</Text>
+          <Button color='indigo' variant='soft' disabled={isSubmitting}>
+            Submit New Issue {isSubmitting && <Spinner />}
           </Button>
         </Flex>
       </form>
