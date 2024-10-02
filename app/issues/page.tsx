@@ -4,7 +4,7 @@ import React from 'react';
 const IssuePage = () => {
   return (
     <div>
-      <Button>
+      <Button color='indigo' variant='soft'>
         <Link href='/issues/new'>New Issue</Link>{' '}
       </Button>
     </div>
