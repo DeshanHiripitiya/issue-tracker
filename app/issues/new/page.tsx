@@ -1,24 +1,41 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button, Callout, Flex, TextArea, TextField } from '@radix-ui/themes';
+import {
+  Button,
+  Callout,
+  Flex,
+  Text,
+  TextArea,
+  TextField,
+} from '@radix-ui/themes';
 import SimpleMDE from 'react-simplemde-editor';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import 'easymde/dist/easymde.min.css';
-import { log } from 'console';
-import axios from 'axios'
+import { issueSchema } from '@/app/validationSchema';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { CgLogIn } from 'react-icons/cg';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
-interface IssueForm {
-  title: string;
-  description: string;
-}
+type IssueForm = z.infer<typeof issueSchema>;
+// z.infer<typeof issueSchema> will generate the following type automatically:
+// interface IssueForm {
+//   title: string;
+//   description: string;
+// }
 
 const NewIssuePage = () => {
-    const router = useRouter();
-  const { register, control, handleSubmit } = useForm<IssueForm>();
-    const [error, setError] = useState('');
+  const router = useRouter();
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IssueForm>({
+    resolver: zodResolver(issueSchema),
+  });
+  const [error, setError] = useState('');
 
   return (
     <div className='max-w-[500px]'>
@@ -45,6 +62,7 @@ const NewIssuePage = () => {
             placeholder='title'
             {...register('title')}
           />
+          {errors.title && <Text color='red'>{errors.title.message}</Text>}
           <Controller //This is a component from react-hook-form that allows you to handle complex form fields, such as a custom component or an external UI library that doesn't directly support register
             name='description'
             control={control} //This passes the form control object from react-hook-form to manage the state and validation for this specific field.
@@ -58,7 +76,7 @@ const NewIssuePage = () => {
               />
             )}
           />
-
+          {errors.description && <Text color='red'>{errors.description.message}</Text>}
           <Button color='indigo' variant='soft'>
             Submit New Issue
           </Button>
