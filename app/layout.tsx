@@ -1,9 +1,17 @@
 import '@radix-ui/themes/styles.css';
-import { Theme, ThemePanel } from '@radix-ui/themes';
+import { Theme } from '@radix-ui/themes';
 import type { Metadata } from "next";
+import './theme-config.css';
 import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "./Navbar";
+import { Inter } from 'next/font/google';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,12 +37,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.variable} antialiased`}
       >
         <Theme>
         <Navbar />
         <main className='p-5'>{children}</main>
-        <ThemePanel />
+        {/* <ThemePanel /> */}
         </Theme>
       </body>
     </html>
